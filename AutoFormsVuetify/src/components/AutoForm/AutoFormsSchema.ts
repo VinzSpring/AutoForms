@@ -1,7 +1,7 @@
 
 export type InitResult<T> = {
   value: T;
-  label?: string;
+  label: string;
   disabled?: boolean;
   validate?: (ctx: object, valuePath: string, value: any) => string | true;
   onChoice?: (ctx: object, valuePath: string, choice: string) => boolean;
@@ -35,6 +35,16 @@ export const testSchema: Schema = {
     User: {
       label: "User",
       fields: {
+        blogEntries: {
+          type: 'BlogEntry',
+          isArray: true,
+          required: false,
+          init: (ctx, valuePath) => ({
+            label: "Blog Entries",
+            value: [],
+            onChoice: (ctx, valuePath, choice) => true
+          })
+        },
         name: {
           type: 'string',
           required: true,
@@ -124,6 +134,7 @@ export const testSchema: Schema = {
           type: 'string',
           required: true,
           init: (ctx, valuePath) => ({
+            label: "Value",
             value: "Default Value",
             validate: (ctx, valuePath, value) => value.length > 0 || "Value must not be empty"
           })
@@ -153,6 +164,14 @@ export const testSchema: Schema = {
             value: "Default URL",
             label: "URL"
           })
+        },
+        caption: {
+          type: 'string',
+          required: true,
+          init: (ctx, valuePath) => ({
+            value: "Default Caption",
+            label: "Caption"
+          })
         }
       }
     },
@@ -172,6 +191,7 @@ export const testSchema: Schema = {
           isArray: true,
           required: true,
           init: (ctx, valuePath) => ({
+            label: "Items",
             value: [],
             onChoice: (ctx, valuePath, choice) => true
           })
@@ -179,5 +199,5 @@ export const testSchema: Schema = {
       }
     }
   },
-  defaultEntryType: 'BlogEntry'
+  defaultEntryType: 'User'
 };

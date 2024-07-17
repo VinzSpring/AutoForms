@@ -1,8 +1,8 @@
 <template>
   <v-card class="pa-4" color="white">
-    <h2>{{ schemaType.label }}</h2>
+    <h2 class="mb-3">{{ schemaType.label }}</h2>
     <template v-for="(field, key) in schemaType.fields" :key="field.name">
-      <FormFieldBuilder :schema="schema" :field="field" :context="context" :path="appendPath(path, key as string)" />
+      <FormFieldBuilder :schema="schema" :field="field" :context="context" :path="appendPath(path, key as string)" class="mb-3"/>
     </template>
   </v-card>
 </template>

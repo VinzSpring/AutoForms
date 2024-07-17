@@ -1,6 +1,6 @@
 <template>
   <v-card class="pa-4" color="white">
-    <h2>Select a type</h2>
+    <h2 class="mb-3">Select a type</h2>
     <v-select :items="selectItems" v-model="selected" label="Select" />
     <FormBuilder
       v-if="selected"

@@ -1,16 +1,12 @@
 <template>
   <v-card class="pa-4" color="white">
-    <v-row class="mb-4">
-      <v-col>
-        <h2>Add items</h2>
-      </v-col>
-    </v-row>
-    <v-row class="mb-4">
+    <h2 class="mb-3">{{ initResult?.label }}</h2>
+    <v-row>
       <v-col cols="auto">
-        <v-btn @click="addItem" class="ma-2">Add</v-btn>
+        <v-btn @click="addItem" class="ml-2">Add</v-btn>
       </v-col>
       <v-col cols="auto">
-        <v-btn @click="clearItems" class="ma-2">Clear</v-btn>
+        <v-btn @click="clearItems" class="ml-2">Clear</v-btn>
       </v-col>
     </v-row>
     <v-list>
