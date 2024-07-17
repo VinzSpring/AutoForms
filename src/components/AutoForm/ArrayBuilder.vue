@@ -10,21 +10,31 @@
       </v-col>
     </v-row>
     <v-list>
-      <v-list-item v-for="(_, index) in formVal" :key="index">
+      <v-list-item 
+        v-for="item in formVal" 
+        :key="item.key"
+        draggable="true" 
+        @dragstart="dragStart($event, item.key)" 
+        @dragover.prevent 
+        @drop="drop($event, item.key)"
+      >
         <v-row>
+          <v-col cols="auto">
+            <v-icon class="drag-handle" >mdi-drag</v-icon>
+          </v-col>
           <v-col>
             <FormFieldBuilder
               :mutator="props.mutator"
               :schema="props.schema"
               :field="schemaFieldWithoutArray"
-              :keyName="index.toString()"
-              :path="appendPath(props.valuePath, index.toString())"
+              :keyName="item.key"
+              :path="appendPath(props.valuePath, item.key)"
               :context="ctx" 
             />
           </v-col>
           <v-col cols="auto">
             <v-list-item-action>
-              <v-btn icon @click="removeSpecificItem(index)">
+              <v-btn icon @click="removeSpecificItem(item.key)">
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </v-list-item-action>
@@ -50,10 +60,37 @@ const props = defineProps<{
   ctx: any;
 }>();
 
-const formVal = ref<any[]>([]);
+type FormItemWrapper = {
+  key: string;
+  value: any;
+};
+
+const formVal = ref<FormItemWrapper[]>([]);
 const initResult = ref<InitResult<any>>();
 
 const schemaFieldWithoutArray = {...props.schemaField, isArray: false};
+
+let draggedItemKey: string | null = null;
+
+const dragStart = (event: DragEvent, key: string) => {
+  draggedItemKey = key;
+};
+
+const drop = (event: DragEvent, key: string) => {
+  if (draggedItemKey !== null) {
+    const draggedIndex = formVal.value.findIndex(item => item.key === draggedItemKey);
+    const dropIndex = formVal.value.findIndex(item => item.key === key);
+    const [draggedItem] = formVal.value.splice(draggedIndex, 1);
+    formVal.value.splice(dropIndex, 0, draggedItem);
+    draggedItemKey = null;
+    updateFormVal();
+  }
+};
+
+const updateFormVal = () => {
+  const values = formVal.value.map(item => item.value);
+  onChanged(props.ctx, props.valuePath, values, props.mutator);
+};
 
 let onValidate = (ctx: object, valuePath: string, value: number): string | true => {
   if (Number.isNaN(value) || !Number.isFinite(value)){
@@ -66,26 +103,32 @@ let onChanged = (ctx: object, valuePath: string, value: any, mutator: (valuePath
   mutator(valuePath, value);
 };
 
+const generateKey = () => Math.random().toString(36).substr(2, 9);
+
 const addItem = () => {
-  formVal.value.push({});
+  formVal.value.push({ key: generateKey(), value: {} });
+  updateFormVal();
 };
 
 const clearItems = () => {
   formVal.value = [];
-  onChanged(props.ctx, props.valuePath, undefined, props.mutator);
+  updateFormVal();
 };
 
-const removeSpecificItem = (index: number) => {
-  formVal.value.splice(index, 1);
-  onChanged(props.ctx, props.valuePath, undefined, props.mutator);
+const removeSpecificItem = (key: string) => {
+  const index = formVal.value.findIndex(item => item.key === key);
+  if (index !== -1) {
+    formVal.value.splice(index, 1);
+    updateFormVal();
+  }
 };
 
 onMounted(() => {
   initResult.value = props.schemaField.init(props.ctx, props.valuePath);
-  formVal.value = initResult.value.value;
+  formVal.value = initResult.value.value.map((item: any) => ({ key: generateKey(), value: item }));
   onValidate = initResult.value.validate || onValidate;
   onChanged = initResult.value.onChanged || onChanged;
-  onChanged(props.ctx, props.valuePath, formVal.value, props.mutator);
+  updateFormVal();
 });
 </script>
 
@@ -96,5 +139,8 @@ onMounted(() => {
 }
 .v-btn {
   margin: 4px;
+}
+.drag-handle {
+  cursor: grab;
 }
 </style>
