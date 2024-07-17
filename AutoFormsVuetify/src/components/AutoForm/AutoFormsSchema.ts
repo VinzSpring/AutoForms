@@ -10,6 +10,7 @@ export type InitResult<T> = {
 
 export type SchemaField = {
   type: string;
+  isArray?: boolean;
   required: boolean;
   init: (ctx: any, valuePath: string) => InitResult<any>;
 };
@@ -168,6 +169,7 @@ export const testSchema: Schema = {
         },
         items: {
           type: 'TextEntry|ImageEntry',
+          isArray: true,
           required: true,
           init: (ctx, valuePath) => ({
             value: [],

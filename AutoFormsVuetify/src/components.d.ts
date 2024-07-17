@@ -8,11 +8,13 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
+    ArrayBuilder: typeof import('./components/AutoForm/ArrayBuilder.vue')['default']
     AutoForm: typeof import('./components/AutoForm/AutoForm.vue')['default']
     BoolValue: typeof import('./components/AutoForm/BoolValue.vue')['default']
     ChoiceBuilder: typeof import('./components/AutoForm/ChoiceBuilder.vue')['default']
     copy: typeof import('./components/AutoForm/FormBuilder copy.vue')['default']
     FormBuilder: typeof import('./components/AutoForm/FormBuilder.vue')['default']
+    FormFieldBuilder: typeof import('./components/AutoForm/FormFieldBuilder.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     IntegerFormValue: typeof import('./components/AutoForm/IntegerFormValue.vue')['default']
     NumberFormValue: typeof import('./components/AutoForm/NumberFormValue.vue')['default']
