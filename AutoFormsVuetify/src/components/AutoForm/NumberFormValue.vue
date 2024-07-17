@@ -3,15 +3,13 @@
     v-model="formVal"
     :rules="[ (val) => onValidate(props.ctx, props.valuePath, val) ]"
     :label="initResult?.label"
-    @change="(value: string) => {
-      const parsedValue = parseInt(value, 10);
-      if (isNaN(parsedValue)) {
+    @update:modelValue="(value: string) => {
+      const n = Number(value);
+      if (Number.isNaN(n) || !Number.isFinite(n)){
         return;
       }
-      const result = onValidate(props.ctx, props.valuePath, parsedValue);
-      if (result === true) {
-        formVal = parsedValue;
-        onChanged(props.ctx, props.valuePath, parsedValue, props.ctx.$set);
+      if (onValidate(props.ctx, props.valuePath, n) === true) {
+        onChanged(props.ctx, props.valuePath, value, props.mutator);
       }
     }"
     :disabled="initResult?.disabled"
@@ -24,6 +22,7 @@ import { ref, defineProps, onMounted } from 'vue'
 import { SchemaField, InitResult } from './AutoFormsSchema';
 
 const props = defineProps<{
+  mutator: (valuePath: string, value: any) => void;
   schema: SchemaField;
   valuePath: string;
   ctx: any;
@@ -33,14 +32,15 @@ const formVal = ref<number | string>('');
 const initResult = ref<InitResult<number>>();
 
 let onValidate = (ctx: object, valuePath: string, value: number): string | true => {
-  if (Number.isNaN(value) || !Number.isFinite(value)){
+  const n = Number(value);
+  if (Number.isNaN(n) || !Number.isFinite(n)){
     return 'Value must be a valid number';
   }
   return true;
 };
 
 let onChanged = (ctx: object, valuePath: string, value: any, mutator: (valuePath: string, value: any) => void) => {
-  // do nothing
+  mutator(valuePath, value);
 };
 
 onMounted(() => {

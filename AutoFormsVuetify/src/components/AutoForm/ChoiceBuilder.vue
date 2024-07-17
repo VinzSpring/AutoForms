@@ -4,6 +4,7 @@
     <v-select :items="selectItems" v-model="selected" label="Select" />
     <FormBuilder
       v-if="selected"
+      :mutator="props.mutator"
       :schema="props.schema"
       :schemaType="getNonPrimitive(selected)"
       :path="props.valuePath"
@@ -19,6 +20,7 @@ import { SchemaField, InitResult, Schema, SchemaType } from './AutoFormsSchema';
 import { parseChoice } from './helpers/index';
 
 const props = defineProps<{
+  mutator: (valuePath: string, value: any) => void;
   schema: Schema;
   schemaField: SchemaField;
   valuePath: string;
@@ -59,7 +61,7 @@ let onValidate = (ctx: object, valuePath: string, value: number): string | true 
 };
 
 let onChanged = (ctx: object, valuePath: string, value: any, mutator: (valuePath: string, value: any) => void) => {
-  // do nothing
+  mutator(valuePath, value);
 };
 
 onMounted(() => {

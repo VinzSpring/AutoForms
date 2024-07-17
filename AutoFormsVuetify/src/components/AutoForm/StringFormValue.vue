@@ -3,11 +3,9 @@
     v-model="formVal"
     :rules="[ (val) => onValidate(props.ctx, props.valuePath, val) ]"
     :label="initResult?.label"
-    @change="(value: string) => {
-      const result = onValidate(props.ctx, props.valuePath, value);
-      if (result === true) {
-        formVal = value;
-        onChanged(props.ctx, props.valuePath, value, props.ctx.$set);
+    @update:modelValue="(value: string) => {
+      if (onValidate(props.ctx, props.valuePath, value) === true) {
+        onChanged(props.ctx, props.valuePath, value, props.mutator);
       }
     }"
     :disabled="initResult?.disabled"
@@ -19,6 +17,7 @@ import { ref, defineProps, onMounted } from 'vue'
 import { SchemaField, InitResult } from './AutoFormsSchema';
 
 const props = defineProps<{
+  mutator: (valuePath: string, value: any) => void;
   schema: SchemaField;
   valuePath: string;
   ctx: any;
@@ -35,7 +34,7 @@ let onValidate = (ctx: object, valuePath: string, value: any): string | true => 
 };
 
 let onChanged = (ctx: object, valuePath: string, value: any, mutator: (valuePath: string, value: any) => void) => {
-  // do nothing
+  mutator(valuePath, value);
 };
 
 onMounted(() => {

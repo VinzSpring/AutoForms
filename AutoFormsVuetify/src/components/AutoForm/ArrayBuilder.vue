@@ -13,15 +13,14 @@
       <v-list-item v-for="(_, index) in formVal" :key="index">
         <v-row>
           <v-col>
-            <v-list-item-content>
-              <FormFieldBuilder
-                :schema="props.schema"
-                :field="schemaFieldWithoutArray"
-                :keyName="index.toString()"
-                :path="appendPath(props.valuePath, index.toString())"
-                :context="ctx" 
-              />
-            </v-list-item-content>
+            <FormFieldBuilder
+              :mutator="props.mutator"
+              :schema="props.schema"
+              :field="schemaFieldWithoutArray"
+              :keyName="index.toString()"
+              :path="appendPath(props.valuePath, index.toString())"
+              :context="ctx" 
+            />
           </v-col>
           <v-col cols="auto">
             <v-list-item-action>
@@ -44,6 +43,7 @@ import FormFieldBuilder from './FormFieldBuilder.vue';
 import { appendPath } from './helpers/index';
 
 const props = defineProps<{
+  mutator: (valuePath: string, value: any) => void;
   schema: Schema;
   schemaField: SchemaField;
   valuePath: string;
@@ -63,7 +63,7 @@ let onValidate = (ctx: object, valuePath: string, value: number): string | true 
 };
 
 let onChanged = (ctx: object, valuePath: string, value: any, mutator: (valuePath: string, value: any) => void) => {
-  // do nothing
+  mutator(valuePath, value);
 };
 
 const addItem = () => {

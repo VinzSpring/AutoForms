@@ -5,7 +5,7 @@ export type InitResult<T> = {
   disabled?: boolean;
   validate?: (ctx: object, valuePath: string, value: any) => string | true;
   onChoice?: (ctx: object, valuePath: string, choice: string) => boolean;
-  onChanged?: (ctx: object, valuePath: string, value: any, mutator: (valuePath: string, value: any) => void) => void; // this allows for dispatching changes to other fields, even in parent objects
+  onChanged?: (ctx: object, valuePath: string, value: T, mutator: (valuePath: string, value: any) => void) => void; // this allows for dispatching changes to other fields, even in parent objects
 };
 
 export type SchemaField = {
@@ -35,6 +35,14 @@ export const testSchema: Schema = {
     User: {
       label: "User",
       fields: {
+        age: {
+          type: 'number',
+          required: true,
+          init: (ctx, valuePath) => ({
+            value: 21,
+            label: "Age"
+          })
+        },
         blogEntries: {
           type: 'BlogEntry',
           isArray: true,
