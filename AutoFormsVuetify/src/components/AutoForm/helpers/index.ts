@@ -61,6 +61,13 @@ export function deleteObjectAtPath(obj: any, path: string) {
           current.splice(index, 1);
       }
   } else {
-      delete current[finalKey];
+    const el = current[finalKey];
+    if (el) {
+      if (Array.isArray(el)) {
+        current[finalKey] = [];
+      } else {
+        delete current[finalKey];
+      }
+    }
   }
 }

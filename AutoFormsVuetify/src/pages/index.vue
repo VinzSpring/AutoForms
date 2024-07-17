@@ -1,10 +1,6 @@
 <template>
   <div class="d-flex justify-center">
     <AutoForm :schema="testSchema"/>
-    <div>
-      {{ 
-         }}
-    </div>
   </div>
 </template>
 
