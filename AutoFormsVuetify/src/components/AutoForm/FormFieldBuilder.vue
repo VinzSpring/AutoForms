@@ -11,7 +11,6 @@
     </template>
 </template>
 <template v-else-if="field.isArray">
-    Array
     <ArrayBuilder :schema="schema" :schema-field="field" :value-path="path" :ctx="context" />
 </template>
 <template v-else-if="isChoice(field.type)">
