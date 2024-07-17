@@ -90,7 +90,6 @@
         zip: {
           type: 'NonEmptyString';
           required: true;
-          placeholder: "Enter a value";
           init: (ctx, valuePath) => {
             return {
               value: "Default Zip",
@@ -107,7 +106,6 @@
         value: {
           type: 'String';
           required: true;
-          placeholder: "Enter a value";
           init: (ctx, valuePath) => {
             return {
               value: "Default Value",
