@@ -18,7 +18,7 @@
         @dragover.prevent 
         @drop="drop($event, index)"
       >
-        <v-row>
+        <v-row class="py-2">
           <v-col cols="auto">
             <v-icon class="drag-handle" >mdi-drag</v-icon>
           </v-col>
