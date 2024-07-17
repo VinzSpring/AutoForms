@@ -40,7 +40,7 @@ import { ref, onMounted } from 'vue';
 import { defineProps } from 'vue';
 import { SchemaField, InitResult, Schema } from './AutoFormsSchema';
 import FormFieldBuilder from './FormFieldBuilder.vue';
-import { appendPath } from './helpers/index';
+import { appendPath, deleteObjectAtPath } from './helpers/index';
 
 const props = defineProps<{
   mutator: (valuePath: string, value: any) => void;
@@ -72,10 +72,12 @@ const addItem = () => {
 
 const clearItems = () => {
   formVal.value = [];
+  deleteObjectAtPath(props.ctx, props.valuePath);
 };
 
 const removeSpecificItem = (index: number) => {
   formVal.value.splice(index, 1);
+  deleteObjectAtPath(props.ctx, appendPath(props.valuePath, index.toString()));
 };
 
 onMounted(() => {
@@ -83,6 +85,7 @@ onMounted(() => {
   formVal.value = initResult.value.value;
   onValidate = initResult.value.validate || onValidate;
   onChanged = initResult.value.onChanged || onChanged;
+  onChanged(props.ctx, props.valuePath, formVal.value, props.mutator);
 });
 </script>
 

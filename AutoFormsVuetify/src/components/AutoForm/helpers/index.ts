@@ -39,3 +39,28 @@ export function updateObjectAtPath(obj: any, path: string, value: any) {
       }
   }
 }
+
+export function deleteObjectAtPath(obj: any, path: string) {
+  console.info('deleteObjectAtPath', obj, path);
+  const keys = path.split('.');
+
+  let current = obj;
+  for (let i = 0; i < keys.length - 1; i++) {
+      const key = keys[i];
+      // If the current key doesn't exist, nothing to delete
+      if (!(key in current)) {
+          return;
+      }
+      current = current[key];
+  }
+
+  const finalKey = keys[keys.length - 1];
+  if (Array.isArray(current)) {
+      const index = parseInt(finalKey);
+      if (index >= 0 && index < current.length) {
+          current.splice(index, 1);
+      }
+  } else {
+      delete current[finalKey];
+  }
+}
