@@ -86,7 +86,7 @@ const drop = (event: DragEvent, index: number) => {
 };
 
 const updateFormVal = () => {
-  onChanged(props.ctx, props.valuePath, formVal.value, props.mutator);
+  onChanged(props.ctx, props.valuePath, formVal.value.map(v => v.value), props.mutator);
 };
 
 let onValidate = (ctx: object, valuePath: string, value: number): string | true => {
@@ -112,12 +112,12 @@ const clearItems = () => {
 
 const removeSpecificItem = (index: number) => {
   formVal.value.splice(index, 1);
-  updateFormVal();
+  nextTick(() => updateFormVal());
 };
 
 onMounted(() => {
   initResult.value = props.schemaField.init(props.ctx, props.valuePath);
-  formVal.value = initResult.value.value;
+  formVal.value = initResult.value.value.map((v: any) => ({id: Math.random().toString(), value: v}));
   onValidate = initResult.value.validate || onValidate;
   onChanged = initResult.value.onChanged || onChanged;
   updateFormVal();
