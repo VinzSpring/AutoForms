@@ -1,5 +1,11 @@
 <template>
-  <AutoForm :schema="testSchema"/>
+  <div class="d-flex justify-center">
+    <AutoForm :schema="testSchema"/>
+    <div>
+      {{ 
+         }}
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>

@@ -20,7 +20,6 @@
 <script setup lang="ts">
 import { ref, defineProps, onMounted } from 'vue'
 import { SchemaField, InitResult } from './AutoFormsSchema';
-import { deleteObjectAtPath } from './helpers/index';
 
 const props = defineProps<{
   mutator: (valuePath: string, value: any) => void;
@@ -56,7 +55,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  deleteObjectAtPath(props.ctx, props.valuePath);
+  onChanged(props.ctx, props.valuePath, undefined, props.mutator);
 });
 </script>
 
